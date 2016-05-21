@@ -21,5 +21,9 @@ Compose.prototype = {
 	},
 
 	get_stack: function(name) {
+		var stack_file = this.base_dir + "/" + name + "/docker-compose.yaml";
+		return fsp
+			.readFile(stack_file, "utf-8")
+			.then(JSON.parse)
 	}
 }
