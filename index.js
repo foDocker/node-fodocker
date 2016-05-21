@@ -22,7 +22,8 @@ server.post('/stacks/:stack', function(req, res, next) {
 			console.log(error);
 			res.send(500);
 			next();
-		});
+		})
+	;
 });
 
 server.get('/stacks/:stack', function(req, res, next) {
@@ -39,7 +40,8 @@ server.get('/stacks/:stack', function(req, res, next) {
 			console.log(error);
 			res.send(500);
 			next();
-		});
+		})
+	;
 });
 
 server.listen(8081, function() {
