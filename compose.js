@@ -9,14 +9,14 @@ function Compose() {
 Compose.prototype = {
 	save_stack: function(name, content) {
 		var stack_dir = this.base_dir + "/" + name;
-		return fsp.mkdir(
-				stack_dir
-			).then(result =>
-					fsp.writeFile(stack_dir + "/docker-compose.yaml", content),
-				error => {
-					console.log(error);
-					throw error;
-				}
+		return fsp
+			.mkdir(stack_dir)
+			.then(result =>
+				fsp.writeFile(stack_dir + "/docker-compose.yaml", content)
 			)
+			.catch(error => {
+				console.error(error);
+				throw error;
+			})
 	}
 }
