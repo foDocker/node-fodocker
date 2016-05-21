@@ -23,7 +23,7 @@ server.post('/stacks/:stack', function(req, res, next) {
 server.get('/stacks/:stack', function(req, res, next) {
 	var stack = req.params.stack;
 	Compose
-		.get_stack(stack).load()
+		.get_stack(stack)
 		.then(result => {
 			res.send(result);
 			next();
