@@ -12,13 +12,13 @@ server.post('/stacks/:stack', function(req, res, next) {
 	compose.save_stack(
 		stack,
 		content
-	).then((result => {
+	).then(result => {
 		res.send(201);
 		next();
-	}), (error =>{
+	}).catch(error =>{
 		res.send(500);
 		next();
-	}))
+	})
 });
 
 server.listen(8081, function() {
