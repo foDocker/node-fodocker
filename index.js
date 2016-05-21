@@ -9,19 +9,22 @@ server.use(restify.jsonBodyParser({maxBodySize: 60 * 1024}));
 server.post('/stacks/:stack', function(req, res, next) {
 	var stack = req.params.stack;
 	var content = req.body;
-	compose.save_stack(
-		stack,
-		content
-	).then((result => {
-		res.send(201);
-		next();
-	}), (error =>{
-		res.send(500);
-		next();
-	}))
+	compose
+		.save_stack(
+			stack,
+			content
+		)
+		.then(result => {
+			res.send(201);
+			next();
+		})
+		.catch(error =>{
+			res.send(500);
+			next();
+		})
+	;
 });
 
 server.listen(8081, function() {
 	console.log('%s listening at %s', server.name, server.url);
 });
-
