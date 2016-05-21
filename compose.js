@@ -6,7 +6,7 @@ let Compose = {
 	base_dir	: "/tmp",
 
 	save_stack	: function(name, content) {
-		return new Compose.Stack(name).save(content);
+		return new Compose.Stack(name, content).save();
 	},
 
 	get_stack	: function(name) {
@@ -16,13 +16,14 @@ let Compose = {
 
 module.exports = Compose;
 
-Compose.Stack = function(name) {
+Compose.Stack = function(name, content) {
 	if(name == undefined) throw "new stack with no name given";
 	this.name = name;
+	this.content = content;
 }
 
 Compose.Stack.prototype = {
-	save	: function(content) {
+	save	: function() {
 		 var stack_dir = Compose.base_dir + "/" + this.name;
 		 return fsp
 			.mkdir(stack_dir)
@@ -30,7 +31,7 @@ Compose.Stack.prototype = {
 				if (error.code == 'EEXIST') return null;
 				throw error;
 		 	})
-			.then(result => fsp.writeFile(stack_dir + "/docker-compose.yaml", content))
+			.then(result => fsp.writeFile(stack_dir + "/docker-compose.yaml", this.content))
 			.then(data => this)
 		;
 	},
@@ -38,6 +39,10 @@ Compose.Stack.prototype = {
 		var stack_file = Compose.base_dir + "/" + this.name + "/docker-compose.yaml";
 		return fsp
 			.readFile(stack_file, "utf-8")
+			.then(content => {
+				this.content = content;
+				return this;
+			})
 		;
 	}
 };
