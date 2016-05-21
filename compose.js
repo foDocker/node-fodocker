@@ -11,12 +11,11 @@ Compose.prototype = {
 		var stack_dir = this.base_dir + "/" + name;
 		return fsp.mkdir(
 				stack_dir
-			).then(result =>
-					fsp.writeFile(stack_dir + "/docker-compose.yaml", content),
-				error => {
-					console.log(error);
-					throw error;
-				}
+			).catch(error => {
+				if (error.code == 'EEXIST') return null;
+				throw error;
+			}).then(result =>
+				fsp.writeFile(stack_dir + "/docker-compose.yaml", content)
 			)
 	}
 }

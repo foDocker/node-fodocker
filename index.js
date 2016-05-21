@@ -16,6 +16,7 @@ server.post('/stacks/:stack', function(req, res, next) {
 		res.send(201);
 		next();
 	}).catch(error =>{
+		console.log(error);
 		res.send(500);
 		next();
 	})
