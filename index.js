@@ -13,10 +13,10 @@ server.post('/stacks/:stack', function(req, res, next) {
 		stack,
 		content
 	).then((result => {
-		res.send("ok");
+		res.send(201);
 		next();
 	}), (error =>{
-		res.send("error");
+		res.send(500);
 		next();
 	}))
 });
