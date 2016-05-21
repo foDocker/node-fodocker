@@ -1,25 +1,8 @@
 var restify = require("restify");
 var Compose = require("./compose.js");
 
-Promise.prototype.compose = function (compose_func) {
-	return compose_func(this);
-}
-
-function respond_response(req, res, next, opts) {
-	var success_code = opts["success_code"] || 200;
-	var error_class = opts["error_class"] || restify.errors.InternalServerError;
-	return function (promise) {
-		return promise
-			.then(result => {
-				res.send(success_code, result);
-				next();
-			})
-			.catch(error => {
-				console.error(error);
-				next(new error_class(error.message));
-			})
-	}
-}
+var Utils = require("./utils.js");
+var respond_response = Utils.respond_response;
 
 var server = restify.createServer();
 server.use(restify.jsonBodyParser({maxBodySize: 60 * 1024}));
