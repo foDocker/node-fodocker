@@ -12,7 +12,7 @@ server.post('/stacks/:stack', function(req, res, next) {
 	Compose
 		.save_stack(stack, content)
 		.then(stack => undefined)
-		.compose(res.respond_response(next, {"success_code": 201}))
+		.compose(res.handle_response(next, {"success_code": 201}))
 	;
 });
 
@@ -21,7 +21,7 @@ server.get('/stacks/:stack', function(req, res, next) {
 	Compose
 		.get_stack(stack).load()
 		.compose(
-			res.respond_response(
+			res.handle_response(
 				next,
 				{"error_class": restify.errors.NotFoundError}
 			)
