@@ -1,8 +1,7 @@
 var restify = require("restify");
 var Compose = require("./compose.js");
 
-var Utils = require("./utils.js");
-var respond_response = Utils.respond_response;
+require("./utils.js");
 
 var server = restify.createServer();
 server.use(restify.jsonBodyParser({maxBodySize: 60 * 1024}));
@@ -13,7 +12,7 @@ server.post('/stacks/:stack', function(req, res, next) {
 	Compose
 		.save_stack(stack, content)
 		.then(stack => undefined)
-		.compose(respond_response(req, res, next, {"success_code": 201}))
+		.compose(res.respond_response(next, {"success_code": 201}))
 	;
 });
 
@@ -22,8 +21,8 @@ server.get('/stacks/:stack', function(req, res, next) {
 	Compose
 		.get_stack(stack).load()
 		.compose(
-			respond_response(
-				req, res, next,
+			res.respond_response(
+				next,
 				{"error_class": restify.errors.NotFoundError}
 			)
 		)
