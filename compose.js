@@ -19,6 +19,10 @@ let Compose = {
 
 	get_stack		: function(name) {
 		return this._get_or_new_stack(name);
+	},
+
+	del_stack		: function(name) {
+		return this._get_or_new_stack(name).del();
 	}
 };
 
@@ -36,8 +40,8 @@ Compose.Stack = function(name, content) {
 
 Compose.Stack.prototype = {
 	save	: function(content) {
-		 var stack_dir = Compose.base_dir + "/" + this.name;
-		 return fsp
+		var stack_dir = Compose.base_dir + "/" + this.name;
+		return fsp
 			.mkdir(stack_dir)
 			.catch(error => {
 				if (error.code == 'EEXIST') return null;
@@ -53,5 +57,10 @@ Compose.Stack.prototype = {
 			.readFile(stack_file, "utf-8")
 			//.then(JSON.parse)
 		;
+	},
+	del	: function() {
+		var stack_file = Compose.base_dir + "/" + this.name + "/docker-compose.yaml";
+		return fsp
+			.unlink(stack_file)
 	}
 };

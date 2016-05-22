@@ -35,6 +35,20 @@ server.get('/stacks/:stack', function(req, res, next) {
 	;
 });
 
+server.del('/stacks/:stack', function(req, res, next) {
+	var stack = req.params.stack;
+	Compose
+		.del_stack(stack)
+		.then(result => {
+			res.send(result);
+			next();
+		})
+		.catch(error => {
+			console.error(error);
+			next(new restify.errors.NotFoundError(error.message));
+		})
+});
+
 server.listen(8081, function() {
 	console.log('%s listening at %s', server.name, server.url);
 });
