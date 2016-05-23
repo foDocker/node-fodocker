@@ -4,7 +4,7 @@ var Compose = require("./compose.js");
 require("./utils.js");
 
 var server = restify.createServer();
-server.use(restify.jsonBodyParser({maxBodySize: 60 * 1024}));
+server.use(restify.bodyParser({maxBodySize: 60 * 1024}));
 
 server.post('/stacks/:stack', function(req, res, next) {
 	var stack = req.params.stack;
