@@ -19,7 +19,7 @@ server.post('/stacks/:stack', function(req, res, next) {
 server.get('/stacks/:stack', function(req, res, next) {
 	var stack = req.params.stack;
 	Compose
-		.get_stack(stack).load()
+		.get_stack(stack)
 		.compose(
 			res.handle_response(
 				next,
@@ -33,14 +33,13 @@ server.del('/stacks/:stack', function(req, res, next) {
 	var stack = req.params.stack;
 	Compose
 		.del_stack(stack)
-		.then(result => {
-			res.send(result);
-			next();
-		})
-		.catch(error => {
-			console.error(error);
-			next(new restify.errors.NotFoundError(error.message));
-		})
+		.compose(
+			res.handle_response(
+				next,
+				{"error_class": restify.errors.NotFoundError}
+			)
+		)
+	;
 });
 
 server.listen(8081, function() {
