@@ -12,6 +12,7 @@ http.ServerResponse.prototype.handle_response = function (next, opts) {
 	return (promise) => {
 		promise
 			.then(result => {
+				this.header("content-type", "text/plain");
 				this.send(success_code, result);
 				next();
 			})
