@@ -42,10 +42,36 @@ server.del('/stacks/:stack', function(req, res, next) {
 	;
 });
 
+server.post('/stacks/:stack/run', function(req, res, next) {
+	var stack = req.params.stack;
+	Compose
+		.start(stack)
+		.compose(
+			res.handle_response(
+				next,
+				{"error_class": restify.errors.NotFoundError}
+			)
+		)
+	;
+});
+
 server.get('/stacks/:stack/run', function(req, res, next) {
 	var stack = req.params.stack;
 	Compose
 		.ps(stack)
+		.compose(
+			res.handle_response(
+				next,
+				{"error_class": restify.errors.NotFoundError}
+			)
+		)
+	;
+});
+
+server.del('/stacks/:stack/run', function(req, res, next) {
+	var stack = req.params.stack;
+	Compose
+		.stop(stack)
 		.compose(
 			res.handle_response(
 				next,

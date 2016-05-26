@@ -20,6 +20,14 @@ let Compose = {
 
 	ps		: function(name) {
 		return new Compose.Stack(name).status();
+	},
+
+	stop		: function(name) {
+		return new Compose.Stack(name).stop();
+	},
+
+	start		: function(name) {
+		return new Compose.Stack(name).start();
 	}
 };
 
@@ -65,17 +73,8 @@ Compose.Stack.prototype = {
 	_env	: function() {
 		return exec("eval $(docker-machine env)");
 	},
-	run	: function() {
-
-	},
-	stop	: function() {
-
-	},
-	status	: function() {
-		return this._env()
-			.then(result =>
-				exec("cd " + this._dir() + " && docker-compose ps")
-			)
+	_ps	: function() {
+		return exec("cd " + this._dir() + " && docker-compose ps")
 			.then(result => {
 				var lines = result.stdout.split("\n");
 				var service_counts = {};
@@ -92,6 +91,30 @@ Compose.Stack.prototype = {
 				}
 				return service_counts;
 			})
+		;
+	},
+	start	: function() {
+		return this._env()
+			.then(result =>
+				exec(
+					"cd " + this._dir() +
+					" && docker-compose up -d --build --remove-orphan --no-recreate 2>&1"
+				)
+			)
+			.then(result => this._ps())
+		;
+	},
+	stop	: function() {
+		return this._env()
+			.then(result =>
+				exec("cd " + this._dir() + " && docker-compose down --remove-orphan 2>&1")
+			)
+			.then(result => this._ps())
+		;
+	},
+	status	: function() {
+		return this._env()
+			.then(result => this._ps())
 		;
 	}
 };
