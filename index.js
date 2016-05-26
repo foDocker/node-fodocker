@@ -3,6 +3,13 @@ var Compose = require("./compose.js");
 
 require("./utils.js");
 
+var errors = [
+	{
+		"test"	: error => error["code"] == 'ENOENT',
+		"class"	: restify.errors.NotFoundError
+	}
+]
+
 var server = restify.createServer();
 server.use(restify.bodyParser({maxBodySize: 60 * 1024}));
 
@@ -21,10 +28,7 @@ server.get('/stacks/:stack', function(req, res, next) {
 	Compose
 		.get_stack(stack)
 		.compose(
-			res.handle_response(
-				next,
-				{"error_class": restify.errors.NotFoundError}
-			)
+			res.handle_response(next, {"errors": errors})
 		)
 	;
 });
@@ -34,10 +38,7 @@ server.del('/stacks/:stack', function(req, res, next) {
 	Compose
 		.del_stack(stack)
 		.compose(
-			res.handle_response(
-				next,
-				{"error_class": restify.errors.NotFoundError}
-			)
+			res.handle_response(next, {"errors": errors})
 		)
 	;
 });
@@ -48,10 +49,7 @@ server.post('/stacks/:stack/run', function(req, res, next) {
 	Compose
 		.start(stack, scales)
 		.compose(
-			res.handle_response(
-				next,
-				{"error_class": restify.errors.NotFoundError}
-			)
+			res.handle_response(next, {"errors": errors})
 		)
 	;
 });
@@ -61,10 +59,7 @@ server.get('/stacks/:stack/run', function(req, res, next) {
 	Compose
 		.ps(stack)
 		.compose(
-			res.handle_response(
-				next,
-				{"error_class": restify.errors.NotFoundError}
-			)
+			res.handle_response(next, {"errors": errors})
 		)
 	;
 });
@@ -74,10 +69,7 @@ server.del('/stacks/:stack/run', function(req, res, next) {
 	Compose
 		.stop(stack)
 		.compose(
-			res.handle_response(
-				next,
-				{"error_class": restify.errors.NotFoundError}
-			)
+			res.handle_response(next, {"errors": errors})
 		)
 	;
 });
