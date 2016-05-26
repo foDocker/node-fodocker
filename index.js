@@ -44,8 +44,9 @@ server.del('/stacks/:stack', function(req, res, next) {
 
 server.post('/stacks/:stack/run', function(req, res, next) {
 	var stack = req.params.stack;
+	var scales = req.body ? JSON.parse(req.body) : {};
 	Compose
-		.start(stack)
+		.start(stack, scales)
 		.compose(
 			res.handle_response(
 				next,

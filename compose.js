@@ -26,17 +26,18 @@ let Compose = {
 		return new Compose.Stack(name).stop();
 	},
 
-	start		: function(name) {
-		return new Compose.Stack(name).start();
+	start		: function(name, scales) {
+		return new Compose.Stack(name, null, scales).start();
 	}
 };
 
 module.exports = Compose;
 
-Compose.Stack = function(name, content) {
+Compose.Stack = function(name, content, scales) {
 	if(name == undefined) throw "new stack with no name given";
 	this.name = name;
 	this.content = content;
+	this.scales = scales;
 }
 
 Compose.Stack.prototype = {
@@ -101,6 +102,20 @@ Compose.Stack.prototype = {
 					" && docker-compose up -d --build --remove-orphan --no-recreate 2>&1"
 				)
 			)
+			.then(result => this._ps())
+			.then(ps => {
+				var scales = [];
+				for (var service in this.scales) {
+					var scale = scales[service];
+					if (scale == undefined) {
+						scales.push(service + "=" + this.scales[service]);
+					}
+				}
+				return exec(
+					"cd " + this._dir() +
+					" && docker-compose scale " + scales.join(" ")
+				);
+			})
 			.then(result => this._ps())
 		;
 	},
