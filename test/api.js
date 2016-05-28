@@ -24,7 +24,8 @@ describe('compose_api', function() {
 			res
 				.when_done()
 				.then(result => {
-					assert.equal(result, {"0": 201, "1": undefined});
+					assert.equal(result[0], 201);
+					assert.equal(result[1], undefined);
 					done();
 				})
 				.catch(e=>done(e))
